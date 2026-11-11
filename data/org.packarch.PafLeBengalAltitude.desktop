@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Paf le Bengal : Altitude
+GenericName=Jeu d'arcade
+Comment=Baby Kart fait tournoyer le Gremlin du Bengal par la queue et l'envoie jusque dans l'espace
+Exec=packarch-paf-le-bengal-altitude
+Icon=packarch-paf-le-bengal-altitude
+Terminal=false
+Categories=Game;ArcadeGame;
+Keywords=jeu;chat;bengal;espace;rebond;gore;

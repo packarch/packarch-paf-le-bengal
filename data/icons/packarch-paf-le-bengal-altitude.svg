@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Paf le Bengal : Altitude, le Gremlin du Bengal file vers l'espace -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="space" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050818"/>
+      <stop offset="0.65" stop-color="#16245a"/>
+      <stop offset="1" stop-color="#3a6fc4"/>
+    </linearGradient>
+    <clipPath id="frame">
+      <rect x="8" y="8" width="240" height="240" rx="44"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect x="8" y="8" width="240" height="240" fill="url(#space)"/>
+    <!-- etoiles -->
+    <g fill="#ffffff">
+      <circle cx="40" cy="40" r="3"/>
+      <circle cx="210" cy="30" r="2.5"/>
+      <circle cx="226" cy="96" r="3"/>
+      <circle cx="30" cy="110" r="2"/>
+      <circle cx="140" cy="26" r="2"/>
+      <circle cx="80" cy="70" r="1.8"/>
+    </g>
+    <!-- la Terre -->
+    <circle cx="128" cy="560" r="360" fill="#7fb6ff" opacity="0.45"/>
+    <circle cx="128" cy="560" r="350" fill="#1d4fa3"/>
+    <ellipse cx="80" cy="222" rx="44" ry="10" fill="#4b8a3c"/>
+    <ellipse cx="180" cy="228" rx="34" ry="8" fill="#ffffff" opacity="0.7"/>
+  </g>
+
+  <!-- traine de vitesse -->
+  <g stroke="#ffffff" stroke-linecap="round" opacity="0.6">
+    <path d="M100 206 L100 176" stroke-width="6"/>
+    <path d="M128 214 L128 182" stroke-width="6"/>
+    <path d="M156 206 L156 176" stroke-width="6"/>
+  </g>
+
+  <!-- pelote de laine -->
+  <circle cx="200" cy="170" r="26" fill="#d9465a"/>
+  <g stroke="#8f2233" stroke-width="3" fill="none">
+    <ellipse cx="200" cy="170" rx="22" ry="8" transform="rotate(-30 200 170)"/>
+    <ellipse cx="200" cy="170" rx="22" ry="12" transform="rotate(40 200 170)"/>
+  </g>
+
+  <!-- tete du Gremlin du Bengal, avec casque-bocal -->
+  <polygon fill="#db9e4d" points="78,96 88,46 116,82"/>
+  <polygon fill="#db9e4d" points="178,96 168,46 140,82"/>
+  <polygon fill="#f2b8b8" points="88,88 92,62 108,82"/>
+  <polygon fill="#f2b8b8" points="168,88 164,62 148,82"/>
+  <ellipse cx="128" cy="124" rx="58" ry="52" fill="#db9e4d"/>
+  <g fill="#4d2b14">
+    <ellipse cx="100" cy="92" rx="8" ry="6"/>
+    <ellipse cx="128" cy="86" rx="8" ry="6"/>
+    <ellipse cx="156" cy="92" rx="8" ry="6"/>
+    <ellipse cx="84" cy="122" rx="7" ry="9"/>
+    <ellipse cx="172" cy="122" rx="7" ry="9"/>
+  </g>
+  <ellipse cx="128" cy="146" rx="32" ry="22" fill="#fbeedc"/>
+  <polygon fill="#e5737f" points="120,134 136,134 128,144"/>
+  <path d="M128 144 Q122 156 114 152 M128 144 Q134 156 142 152" stroke="#4d2b14" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="106" cy="116" rx="12" ry="10" fill="#5fcf54"/>
+  <ellipse cx="150" cy="116" rx="12" ry="10" fill="#5fcf54"/>
+  <ellipse cx="107" cy="116" rx="3.5" ry="8" fill="#111"/>
+  <ellipse cx="151" cy="116" rx="3.5" ry="8" fill="#111"/>
+  <!-- casque -->
+  <circle cx="128" cy="116" r="84" fill="#bfe3ff" fill-opacity="0.18" stroke="#e8f4ff" stroke-width="5"/>
+  <ellipse cx="90" cy="70" rx="18" ry="8" fill="#ffffff" opacity="0.6" transform="rotate(-35 90 70)"/>
+</svg>

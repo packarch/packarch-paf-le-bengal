@@ -1,0 +1,27 @@
+[package]
+name = "packarch-paf-le-bengal"
+version = "1.0.0"
+edition = "2024"
+description = "Paf le Bengal : deux jeux d'arcade gore pour Packarch, Baby Kart contre le Gremlin du Bengal"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/packarch/packarch-paf-le-bengal"
+authors = ["Fabrice Corraire <antidote1911@gmail.com>"]
+
+[[bin]]
+name = "packarch-paf-le-bengal"
+path = "src/bin/packarch-paf-le-bengal.rs"
+
+[[bin]]
+name = "packarch-paf-le-bengal-altitude"
+path = "src/bin/packarch-paf-le-bengal-altitude.rs"
+
+[dependencies]
+macroquad = "0.4"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Paf le Bengal : Baby Kart, chat tigre gris, et une bulle "PAF !" -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f8de0"/>
+      <stop offset="1" stop-color="#bfe0ff"/>
+    </linearGradient>
+    <clipPath id="frame">
+      <rect x="8" y="8" width="240" height="240" rx="44"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect x="8" y="8" width="240" height="240" fill="url(#sky)"/>
+    <rect x="8" y="196" width="240" height="52" fill="#5a8a3c"/>
+    <rect x="8" y="192" width="240" height="8" fill="#78b34c"/>
+  </g>
+
+  <!-- tete de Baby Kart -->
+  <polygon fill="#9a9aa0" points="44,108 58,52 96,92"/>
+  <polygon fill="#9a9aa0" points="168,108 154,52 116,92"/>
+  <polygon fill="#f2b8b8" points="56,98 62,68 84,92"/>
+  <polygon fill="#f2b8b8" points="156,98 150,68 128,92"/>
+  <ellipse cx="106" cy="138" rx="72" ry="64" fill="#9a9aa0"/>
+  <!-- rayures -->
+  <g stroke="#2b2b30" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M90 82 L94 104"/>
+    <path d="M106 78 L106 102"/>
+    <path d="M122 82 L118 104"/>
+    <path d="M36 128 L60 126"/>
+    <path d="M38 148 L60 144"/>
+    <path d="M176 128 L152 126"/>
+    <path d="M174 148 L152 144"/>
+  </g>
+  <!-- museau -->
+  <ellipse cx="106" cy="164" rx="40" ry="28" fill="#efefe8"/>
+  <polygon fill="#e5737f" points="96,148 116,148 106,160"/>
+  <path d="M106 160 Q98 176 88 170 M106 160 Q114 176 124 170" stroke="#2b2b30" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- yeux determines -->
+  <ellipse cx="80" cy="128" rx="14" ry="11" fill="#cde33a"/>
+  <ellipse cx="132" cy="128" rx="14" ry="11" fill="#cde33a"/>
+  <ellipse cx="82" cy="128" rx="4" ry="10" fill="#111"/>
+  <ellipse cx="134" cy="128" rx="4" ry="10" fill="#111"/>
+  <path d="M64 112 L94 120 M148 112 L118 120" stroke="#2b2b30" stroke-width="6" stroke-linecap="round"/>
+  <!-- moustaches -->
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+    <path d="M140 162 L190 154"/>
+    <path d="M140 170 L192 172"/>
+    <path d="M72 162 L22 154"/>
+    <path d="M72 170 L20 172"/>
+  </g>
+  <!-- explosion PAF -->
+  <g transform="translate(196 62) scale(0.78) translate(-182 -82)">
+  <polygon fill="#b81414" points="182,22 194,52 226,40 212,70 244,82 212,96 226,124 194,112 186,142 170,116 142,130 150,100 120,92 150,78 138,50 168,60"/>
+  <polygon fill="#ffd827" points="182,34 191,58 216,48 205,72 232,82 206,93 217,116 192,106 185,130 172,108 150,118 156,96 132,90 156,79 146,56 170,64"/>
+  <text x="183" y="92" font-family="DejaVu Sans, sans-serif" font-weight="bold" font-size="30" text-anchor="middle" fill="#ffffff" stroke="#3a0a0a" stroke-width="3" paint-order="stroke">PAF</text>
+  </g>
+
+</svg>
