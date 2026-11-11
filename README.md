@@ -1,12 +1,13 @@
 # Paf le Bengal
 
-Deux petits jeux d'arcade (gore, désactivable) pour Packarch, écrits en Rust
+Deux petits jeux d'arcade, **Baseball** et **Altitude** (gore désactivable),
+pour Packarch, écrits en Rust
 avec [macroquad](https://macroquad.rs). Les protagonistes : **Baby Kart**, un
 grand chat tigré gris humanoïde, et le **Gremlin du Bengal**.
 
 Tout est dessiné par le code : aucune image ni aucun son à charger.
 
-## Paf le Bengal (`packarch-paf-le-bengal`)
+## Paf le Bengal : Baseball (`packarch-paf-le-bengal`)
 
 Le Gremlin du Bengal saute de son arbre à chat ; Baby Kart le frappe avec une
 batte entourée de fil barbelé pour l'envoyer le plus loin possible.

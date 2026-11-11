@@ -1,4 +1,4 @@
-//! Paf le Bengal — Baby Kart, un grand chat tigre gris, envoie le Gremlin du Bengal
+//! Paf le Bengal : Baseball — Baby Kart, un grand chat tigre gris, envoie le Gremlin du Bengal
 //! le plus loin possible d'un coup de batte.
 //!
 //! Commandes :
@@ -1783,11 +1783,11 @@ impl Game {
 
         // titre du jeu sur l'ecran de depart
         if self.phase == Phase::Perched {
-            let txt = "PAF LE BENGAL";
-            let size = 64u16;
+            let txt = "PAF LE BENGAL : BASEBALL";
+            let size = 50u16;
             let dim = measure_text(txt, None, size, 1.0);
-            let x = w / 2.0 - dim.width / 2.0 + 60.0;
-            let y = 66.0 + (self.time * 2.0).sin() * 3.0;
+            let x = w / 2.0 - dim.width / 2.0;
+            let y = 62.0 + (self.time * 2.0).sin() * 3.0;
             for (dx, dy) in [(-3.0, 0.0), (3.0, 0.0), (0.0, -3.0), (0.0, 3.0), (4.0, 4.0)] {
                 draw_text(txt, x + dx, y + dy, size as f32, Color::new(0.45, 0.02, 0.02, 1.0));
             }
@@ -1915,7 +1915,7 @@ fn bubble(anchor: Vec2, text: &str, alpha: f32) {
 
 fn conf() -> Conf {
     Conf {
-        window_title: "Paf le Bengal".to_owned(),
+        window_title: "Paf le Bengal : Baseball".to_owned(),
         window_width: 1200,
         window_height: 700,
         high_dpi: true,

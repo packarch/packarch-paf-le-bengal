@@ -1,6 +1,6 @@
 [package]
 name = "packarch-paf-le-bengal"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 description = "Paf le Bengal : deux jeux d'arcade gore pour Packarch, Baby Kart contre le Gremlin du Bengal"
 license = "GPL-3.0-or-later"
