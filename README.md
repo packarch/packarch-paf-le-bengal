@@ -15,6 +15,8 @@ batte entourée de fil barbelé pour l'envoyer le plus loin possible.
 - **Clic / Espace** : faire sauter le bengal, puis **frapper** au bon moment
   (le timing décide de la puissance et de l'angle).
 - Des **mines** sont posées sur le terrain : BOUM, le bengal repart en l'air.
+  Un coup parfait l'envoie à coup sûr sur trois mines d'affilée, un joli coup
+  sur deux.
 - À l'arrivée : gros plan, le bengal part en morceaux.
 
 ## Paf le Bengal : Altitude (`packarch-paf-le-bengal-altitude`)

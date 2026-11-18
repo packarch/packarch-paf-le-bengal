@@ -246,6 +246,8 @@ struct Game {
     mines: Vec<Mine>,
     explosions: Vec<Explosion>,
     mines_hit: u32,
+    forced_mines: u32, // mines garanties restantes dans la chaine
+    auto_perfect: bool, // mode test PAF_PARFAIT=1 : lacher et frappe automatiques
     parts: Vec<BodyPart>,
     dismembered: bool,
 
@@ -391,6 +393,8 @@ impl Game {
             mines: gen_mines(),
             explosions: Vec::new(),
             mines_hit: 0,
+            forced_mines: 0,
+            auto_perfect: std::env::var("PAF_PARFAIT").is_ok_and(|v| v == "1"),
             parts: Vec::new(),
             dismembered: false,
             view: View {
@@ -433,6 +437,7 @@ impl Game {
         self.explosions.clear();
         self.mines = gen_mines();
         self.mines_hit = 0;
+        self.forced_mines = 0;
         self.dismembered = false;
         self.paf = None;
         // les restes des lancers precedents restent par terre (sans saigner)
@@ -513,6 +518,9 @@ impl Game {
             return;
         }
         self.phase_t += dt;
+        if self.auto_perfect {
+            self.auto_play();
+        }
         self.bat_blood = (self.bat_blood - dt * 0.02).max(0.0);
 
         // Coup de batte (avec sous-pas pour ne pas "traverser" le chat)
@@ -800,7 +808,7 @@ impl Game {
     /// Declenche une mine si le chat est dessus.
     fn check_mine(&mut self) -> bool {
         let x = self.pos.x;
-        match self.mines.iter().position(|m| !m.used && (m.x - x).abs() < 0.8) {
+        match self.mines.iter().position(|m| !m.used && (m.x - x).abs() < 1.3) {
             Some(i) => {
                 self.explode(i);
                 true
@@ -827,6 +835,8 @@ impl Game {
         self.damage = 1.0;
         self.set_phase(Phase::Flying);
         self.say(if self.mines_hit > 1 { "ENCORE BOUM !" } else { "BOUM !" });
+        self.forced_mines = self.forced_mines.saturating_sub(1);
+        self.plant_mine_on_landing();
 
         // feu
         for _ in 0..45 {
@@ -873,13 +883,62 @@ impl Game {
         }
     }
 
+    /// Si la chaine de mines garanties n'est pas finie, simule le vol en cours
+    /// (meme integration que step) et pose une mine pile au point de chute.
+    fn plant_mine_on_landing(&mut self) {
+        if self.forced_mines == 0 {
+            return;
+        }
+        let (mut pos, mut vel) = (self.pos, self.vel);
+        for _ in 0..120 * 60 {
+            vel.y -= G * DT;
+            let sp = vel.length();
+            vel -= vel * sp * DRAG * DT;
+            pos += vel * DT;
+            if pos.y <= CAT_R {
+                break;
+            }
+        }
+        let x = pos.x;
+        // pas d'autre mine a cote pour ne pas voler la place de la notre
+        self.mines.retain(|m| m.used || (m.x - x).abs() > 2.6);
+        let i = self.mines.iter().position(|m| m.x > x).unwrap_or(self.mines.len());
+        self.mines.insert(i, Mine { x, used: false });
+    }
+
+    /// Mode test : lache le chat puis declenche le swing au bon moment.
+    fn auto_play(&mut self) {
+        match self.phase {
+            Phase::Perched if self.phase_t > 1.0 => {
+                self.set_phase(Phase::Falling);
+                self.vel = vec2(0.0, 1.3);
+            }
+            Phase::Falling if self.swing_t.is_none() => {
+                // le swing lance maintenant toucherait-il le chat pres de la vitesse max ?
+                let hit = (0..=12).any(|k| {
+                    let tt = WINDUP_TIME + SWING_TIME * (0.35 + 0.3 * k as f32 / 12.0);
+                    let cat = self.pos + self.vel * tt - vec2(0.0, 0.5 * G * tt * tt);
+                    self.contact_at(&pose(Some(tt), self.time), cat).is_some()
+                });
+                if hit {
+                    self.swing_t = Some(0.0);
+                }
+            }
+            _ => {}
+        }
+    }
+
     /// Distance le long de la batte si elle touche le chat.
     fn bat_contact(&self, p: &Pose) -> Option<f32> {
+        self.contact_at(p, self.pos)
+    }
+
+    fn contact_at(&self, p: &Pose, cat: Vec2) -> Option<f32> {
         let dir = Vec2::from_angle(p.bat);
-        let rel = self.pos - p.hands;
+        let rel = cat - p.hands;
         let r = rel.dot(dir).clamp(0.05, BAT_LEN);
         let closest = p.hands + dir * r;
-        if closest.distance(self.pos) < CAT_R + 0.09 {
+        if closest.distance(cat) < CAT_R + 0.09 {
             Some(r)
         } else {
             None
@@ -893,9 +952,13 @@ impl Game {
     fn do_hit(&mut self, p: &Pose, r: f32) {
         let speed_f = p.speed.sqrt();
         let sweet = (1.0 - ((r / BAT_LEN - BAT_SWEET).abs() / 0.5)).clamp(0.2, 1.0);
-        let quality = (speed_f * sweet).clamp(0.0, 1.0);
+        let quality = if self.auto_perfect { 1.0 } else { (speed_f * sweet).clamp(0.0, 1.0) };
         let bat_deg = (p.bat.to_degrees() + 180.0).rem_euclid(360.0) - 180.0;
-        let angle_deg = (45.0 + (bat_deg - BAT_MID_DEG) * 0.75).clamp(5.0, 85.0);
+        let mut angle_deg = (45.0 + (bat_deg - BAT_MID_DEG) * 0.75).clamp(5.0, 85.0);
+        if quality > 0.93 {
+            // un coup parfait part toujours en longueur (angle ideal avec la trainee)
+            angle_deg = angle_deg.clamp(32.0, 42.0);
+        }
         let mut speed = 42.0 * (0.2 + 0.8 * quality) * gen_range(0.96, 1.04);
 
         let label = if quality > 0.93 {
@@ -922,6 +985,15 @@ impl Game {
         self.damage = (self.damage + 0.25 + 0.4 * quality).min(1.0);
         self.launch = Some(Launch { quality, angle_deg, speed });
         self.set_phase(Phase::Flying);
+        // coup parfait : trois mines d'affilee, joli coup : deux
+        self.forced_mines = if quality > 0.93 {
+            3
+        } else if quality > 0.75 {
+            2
+        } else {
+            0
+        };
+        self.plant_mine_on_landing();
 
         if self.gore {
             self.bat_blood = 1.0;
