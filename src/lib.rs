@@ -44,6 +44,13 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 /// version (sans accents : la police par defaut de macroquad n'en a pas).
 pub const CHANGELOG: &[(&str, &[&str])] = &[
     (
+        "1.1.1",
+        &[
+            "Baseball : les mines se declenchent de plus loin (rayon de 3,3 m)",
+            "Baseball : plus de mines, et il y en a toujours, de plus en plus rares avec la distance",
+        ],
+    ),
+    (
         "1.1.0",
         &[
             "Panneau d'infos : la version et les nouveautes s'affichent au premier lancement apres une mise a jour",

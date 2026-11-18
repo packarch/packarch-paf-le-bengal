@@ -196,15 +196,22 @@ struct Explosion {
 }
 
 const EXPLOSION_TIME: f32 = 0.9;
+/// Rayon de detection d'une mine (m).
+const MINE_RADIUS: f32 = 3.3;
 
-fn gen_mines() -> Vec<Mine> {
-    let mut v = Vec::new();
-    let mut x = DROP_X + gen_range(10.0, 18.0);
-    while x < DROP_X + 600.0 {
-        v.push(Mine { x, used: false });
-        x += gen_range(7.0, 20.0);
-    }
-    v
+/// Distance d'avance (m) sur laquelle les mines sont generees devant le chat.
+const MINE_LOOKAHEAD: f32 = 150.0;
+
+/// Premiere mine de la partie.
+fn first_mine_x() -> f32 {
+    DROP_X + gen_range(10.0, 18.0)
+}
+
+/// Ecart jusqu'a la mine suivante : il grandit avec la distance,
+/// les mines se font donc de plus en plus rares.
+fn mine_gap(x: f32) -> f32 {
+    let d = (x - DROP_X).max(0.0);
+    gen_range(7.0, 13.0) * (1.0 + d / 600.0)
 }
 
 // ---------------------------------------------------------------------------
@@ -246,6 +253,7 @@ struct Game {
     pieces: Vec<Piece>,
     splats: Vec<Splat>,
     mines: Vec<Mine>,
+    next_mine_x: f32, // position de la prochaine mine a generer
     explosions: Vec<Explosion>,
     mines_hit: u32,
     forced_mines: u32, // mines garanties restantes dans la chaine
@@ -392,7 +400,8 @@ impl Game {
             decals: Vec::new(),
             pieces: Vec::new(),
             splats: Vec::new(),
-            mines: gen_mines(),
+            mines: Vec::new(),
+            next_mine_x: first_mine_x(),
             explosions: Vec::new(),
             mines_hit: 0,
             forced_mines: 0,
@@ -437,7 +446,8 @@ impl Game {
         self.particles.clear();
         self.splats.clear();
         self.explosions.clear();
-        self.mines = gen_mines();
+        self.mines.clear();
+        self.next_mine_x = first_mine_x();
         self.mines_hit = 0;
         self.forced_mines = 0;
         self.dismembered = false;
@@ -508,6 +518,7 @@ impl Game {
             e.age += dt;
         }
         self.explosions.retain(|e| e.age < EXPLOSION_TIME);
+        self.spawn_mines();
         if let Some((_, age)) = &mut self.paf {
             *age += dt;
             if *age > 0.5 {
@@ -807,10 +818,27 @@ impl Game {
         }
     }
 
+    /// Genere les mines devant le chat, sans limite de distance.
+    fn spawn_mines(&mut self) {
+        while self.next_mine_x < self.pos.x + MINE_LOOKAHEAD {
+            let x = self.next_mine_x;
+            self.next_mine_x += mine_gap(x);
+            // ne pas coller une mine posee au point de chute
+            if self.mines.iter().any(|m| (m.x - x).abs() <= 2.0 * MINE_RADIUS) {
+                continue;
+            }
+            let i = self.mines.iter().position(|m| m.x > x).unwrap_or(self.mines.len());
+            self.mines.insert(i, Mine { x, used: false });
+        }
+        // oublier les mines loin derriere
+        let behind = self.pos.x - MINE_LOOKAHEAD;
+        self.mines.retain(|m| m.x > behind);
+    }
+
     /// Declenche une mine si le chat est dessus.
     fn check_mine(&mut self) -> bool {
         let x = self.pos.x;
-        match self.mines.iter().position(|m| !m.used && (m.x - x).abs() < 1.3) {
+        match self.mines.iter().position(|m| !m.used && (m.x - x).abs() < MINE_RADIUS) {
             Some(i) => {
                 self.explode(i);
                 true
@@ -903,7 +931,7 @@ impl Game {
         }
         let x = pos.x;
         // pas d'autre mine a cote pour ne pas voler la place de la notre
-        self.mines.retain(|m| m.used || (m.x - x).abs() > 2.6);
+        self.mines.retain(|m| m.used || (m.x - x).abs() > 2.0 * MINE_RADIUS);
         let i = self.mines.iter().position(|m| m.x > x).unwrap_or(self.mines.len());
         self.mines.insert(i, Mine { x, used: false });
     }
