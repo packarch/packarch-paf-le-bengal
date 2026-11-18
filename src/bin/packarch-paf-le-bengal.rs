@@ -4,9 +4,11 @@
 //! Commandes :
 //!   Clic / Espace : faire sauter le bengal, puis FRAPPER au bon moment
 //!   G             : activer / desactiver le gore
+//!   I / bouton i  : infos (version et nouveautes), met le jeu en pause
 //!   Echap         : quitter
 
 use macroquad::prelude::*;
+use packarch_paf_le_bengal::Infos;
 use macroquad::rand::gen_range;
 use std::f32::consts::{PI, TAU};
 
@@ -2000,25 +2002,32 @@ fn conf() -> Conf {
 async fn main() {
     macroquad::rand::srand(macroquad::miniquad::date::now() as u64);
     let mut game = Game::new();
+    let mut infos = Infos::new("baseball", "Paf le Bengal : Baseball");
     let mut acc = 0.0;
 
     loop {
-        if is_key_pressed(KeyCode::Escape) {
-            break;
-        }
         let frame = get_frame_time().min(0.1);
-        game.input();
-        acc += frame;
-        let mut steps = 0;
-        while acc >= DT && steps < 20 {
-            game.step(DT);
-            acc -= DT;
-            steps += 1;
+        // panneau d'infos ouvert : jeu en pause
+        if infos.update() {
+            acc = 0.0;
+        } else {
+            if is_key_pressed(KeyCode::Escape) {
+                break;
+            }
+            game.input();
+            acc += frame;
+            let mut steps = 0;
+            while acc >= DT && steps < 20 {
+                game.step(DT);
+                acc -= DT;
+                steps += 1;
+            }
+            game.update_camera(frame);
         }
-        game.update_camera(frame);
 
         clear_background(BLACK);
         game.draw();
+        infos.draw();
         next_frame().await;
     }
 }

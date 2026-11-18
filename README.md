@@ -39,6 +39,8 @@ laine géantes, jusque dans l'espace.
 ## Commandes communes
 
 - **G** : activer / désactiver le gore
+- **I** ou bouton **i** (en bas à gauche) : version et nouveautés, jeu en pause.
+  Le panneau s'ouvre tout seul au premier lancement après une mise à jour
 - **Échap** : quitter
 
 Les records sont enregistrés dans `~/.local/share/packarch-paf-le-bengal/`.
